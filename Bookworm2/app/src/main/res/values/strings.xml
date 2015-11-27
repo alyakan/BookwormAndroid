@@ -5,4 +5,7 @@
     <string name="title_activity_news_feed">NewsFeed</string>
     <string name="title_activity_book_list">BookList</string>
     <string name="title_activity_book_detail">BookDetail</string>
+    <string name="facebook_app_id">851164311667755</string>
+    <string name="title_activity_facebook_login">FacebookLogin</string>
+
 </resources>

@@ -66,6 +66,7 @@ public class BookList extends AppCompatActivity {
         ListView listview = (ListView) this.findViewById(R.id.listview_book);
         listview.setAdapter(bookAdapter);
         final BookList bookList = this;
+
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
