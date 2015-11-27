@@ -102,6 +102,11 @@ public class NewsFeed extends AppCompatActivity {
             startActivity(intent);
         }
 
+        if(id == R.id.action_my_booklist){
+            Intent intent = new Intent(this, MyBookListCategories.class);
+            startActivity(intent);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }
