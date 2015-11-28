@@ -3,4 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorFbTxt">#dfe3ee</color>
+    <color name="colorFbBtn">#3b5998</color>
 </resources>
