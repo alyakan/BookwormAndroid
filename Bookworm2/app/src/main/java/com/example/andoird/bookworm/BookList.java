@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +71,7 @@ public class BookList extends AppCompatActivity {
 
         };
         List<String> book_ArrayList = new ArrayList<String>(Arrays.asList(data));
-        List<String> author_ArrayList = new ArrayList<String>(Arrays.asList(data));
+        List<String> author_ArrayList = new ArrayList<String>(Arrays.asList(data2));
         final ArrayAdapter<String> bookAdapter = new ArrayAdapter<String>(
                 this,
                 R.layout.list_item_book, // The xml component
@@ -95,9 +94,10 @@ public class BookList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String item = bookAdapter.getItem(i);
-
+                String author = authorAdapter.getItem(i);
                 Intent intent = new Intent(bookList, BookDetail.class).
                         putExtra(Intent.EXTRA_TEXT, item);
+                intent.putExtra(Intent.EXTRA_ASSIST_CONTEXT,author);
                 startActivity(intent);
 
             }
