@@ -1,31 +1,33 @@
 package com.example.andoird.bookworm;
-import com.facebook.FacebookSdk;
 
+import android.app.ExpandableListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-public class NewsFeed extends AppCompatActivity {
+public class Profile extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_newsfeed);
+        setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -38,20 +40,22 @@ public class NewsFeed extends AppCompatActivity {
             }
         });
         populateNewsfeed();
+        populateProfileInfo();
+        ((TextView)findViewById(R.id.username_textview)).setText("Aly Yakan");
     }
 
     protected void populateNewsfeed(){
         String[] data = {
-                "Aly is now reading Harry Potter 1",
-                "Rana is now reading Harry Potter 2",
-                "Kareem is now reading Harry Potter 3",
-                "Mohamed is now reading Harry Potter 4",
-                "Joe is now reading Harry Potter 5",
-                "Sara is now reading Harry Potter 6",
-                "Ahmed is now reading Harry Potter 7",
-                "Aly is now reading Harry Potter 8",
-                "Aly is now reading Hunger Games 1",
-                "Aly is now reading Hunger Games 2"
+                "You have finished reading Harry Potter 1",
+                "You have finished reading Harry Potter 2",
+                "You have finished reading Harry Potter 3",
+                "You have finished reading Harry Potter 4",
+                "You have finished reading Harry Potter 5",
+                "You have finished reading Harry Potter 6",
+                "You have started reading Harry Potter 7",
+                "You have started reading Harry Potter 8",
+                "You have started reading Hunger Games 1",
+                "You have added Hunger Games 2 to your wish list"
 
         };
         List<String> newsfeed_ArrayList = new ArrayList<String>(Arrays.asList(data));
@@ -62,28 +66,48 @@ public class NewsFeed extends AppCompatActivity {
                 newsfeed_ArrayList
         );
 
-        ListView listview = (ListView) this.findViewById(R.id.listview_newsfeed);
+        ListView listview = (ListView) this.findViewById(R.id.profile_listView);
+
         listview.setAdapter(newsfeedAdapter);
-        final NewsFeed newsFeed = this;
+        final Profile profile = this;
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String item = newsfeedAdapter.getItem(i);
-
-                Intent intent = new Intent(newsFeed, PostDetail.class).
-                        putExtra(Intent.EXTRA_TEXT, item);
-                startActivity(intent);
-
+                int duration = Toast.LENGTH_SHORT;
+//                Intent intent = new Intent(this, DetailActivity.class).
+//                        putExtra(Intent.EXTRA_TEXT, forecast);
+//                startActivity(intent);
+                Toast toast = Toast.makeText(profile, item, duration);
+                toast.show();
             }
         });
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_newsfeed, menu);
-        return true;
+    public void populateProfileInfo(){
+        String [] data = {
+                "Birthday",
+                "Email",
+                "Gender"
+        };
+        // Adding child data
+        List<String> name = new ArrayList<String>();
+        name.add("10/8/1994");
+        name.add("aly.yakan@gmail.com");
+        name.add("Male");
+
+        List<String> profile_info = new ArrayList<String>();
+        profile_info.add("Personal Info");
+
+
+        HashMap<String, List<String>> listDataChild = new HashMap<String, List<String>>();
+        listDataChild.put(profile_info.get(0), name); // Header, Child data
+
+        com.example.andoird.bookworm.ExpandableListAdapter expandableListAdapter = new com.example.andoird.bookworm.ExpandableListAdapter(this, profile_info, listDataChild);
+
+        ExpandableListView expandableListView = (ExpandableListView) this.findViewById(R.id.lvExp);
+        expandableListView.setAdapter(expandableListAdapter);
     }
 
     @Override
@@ -103,23 +127,12 @@ public class NewsFeed extends AppCompatActivity {
             startActivity(intent);
         }
 
-<<<<<<< HEAD
-        if(id == R.id.action_friendlist){
-            Intent intent = new Intent(this, FriendList.class);
-            startActivity(intent);
-        }
-=======
         if(id == R.id.action_my_booklist){
             Intent intent = new Intent(this, MyBookListCategories.class);
             startActivity(intent);
         }
 
-        if(id == R.id.action_profile){
-            Intent intent = new Intent(this, Profile.class);
-            startActivity(intent);
-        }
-
->>>>>>> master
         return super.onOptionsItemSelected(item);
     }
+
 }
