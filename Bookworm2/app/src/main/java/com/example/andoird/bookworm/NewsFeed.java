@@ -69,12 +69,11 @@ public class NewsFeed extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String item = newsfeedAdapter.getItem(i);
-                int duration = Toast.LENGTH_SHORT;
-//                Intent intent = new Intent(this, DetailActivity.class).
-//                        putExtra(Intent.EXTRA_TEXT, forecast);
-//                startActivity(intent);
-                Toast toast = Toast.makeText(newsFeed, item, duration);
-                toast.show();
+
+                Intent intent = new Intent(newsFeed, PostDetail.class).
+                        putExtra(Intent.EXTRA_TEXT, item);
+                startActivity(intent);
+
             }
         });
 
@@ -104,6 +103,10 @@ public class NewsFeed extends AppCompatActivity {
             startActivity(intent);
         }
 
+        if(id == R.id.action_friendlist){
+            Intent intent = new Intent(this, FriendList.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 }
