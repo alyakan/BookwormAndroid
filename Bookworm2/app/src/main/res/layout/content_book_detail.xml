@@ -76,5 +76,4 @@
         android:layout_alignRight="@+id/finish_reading_button"
         android:layout_alignEnd="@+id/finish_reading_button" />
 
-
 </RelativeLayout>

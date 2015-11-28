@@ -78,18 +78,18 @@ public class BookList extends AppCompatActivity {
                 R.id.list_item_book_text_view, // The textview inside the xml component
                 book_ArrayList
         );
-
         final ArrayAdapter<String> authorAdapter = new ArrayAdapter<String>(
                 this,
                 R.layout.list_item_book, // The xml component
-                R.id.list_item_book_author_text_view, // The textview inside the xml component
+                R.id.list_item_book_text_view, // The textview inside the xml component
                 author_ArrayList
         );
         BookList booklist = this;
         ListView listview = (ListView) this.findViewById(R.id.listview_book);
         listview.setAdapter(bookAdapter);
-        //listview.setAdapter(authorAdapter);
+    //    listview.setAdapter(authorAdapter);
         final BookList bookList = this;
+
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

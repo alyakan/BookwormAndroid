@@ -32,6 +32,7 @@ public class BookDetail extends AppCompatActivity {
         populateDetailView();
         populateBookDetailReviews();
         addListenerOnButton();
+
     }
 
     protected void populateDetailView() {
