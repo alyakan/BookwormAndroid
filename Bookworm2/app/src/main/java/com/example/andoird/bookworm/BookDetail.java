@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -74,6 +75,17 @@ public class BookDetail extends AppCompatActivity {
         listview.setAdapter(reviewsAdapter);
         button = (Button) findViewById(R.id.finish_reading_button);
         button.setText(String.format("Start Reading"));
+        final BookDetail reviewlist = this;
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String item = reviewsAdapter.getItem(i);
+                Intent intent = new Intent(reviewlist, ReviewDetail.class).
+                        putExtra(Intent.EXTRA_TEXT, item);
+                startActivity(intent);
+
+            }
+        });
 
     }
 
