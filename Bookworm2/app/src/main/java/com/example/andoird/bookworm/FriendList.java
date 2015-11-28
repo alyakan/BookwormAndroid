@@ -63,17 +63,17 @@ public class FriendList extends AppCompatActivity {
         ListView listview = (ListView) this.findViewById(R.id.listview_friend);
         listview.setAdapter(friendAdapter);
 
-//        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                String item = bookAdapter.getItem(i);
-//
-//                Intent intent = new Intent(friendList, BookDetail.class).
-//                        putExtra(Intent.EXTRA_TEXT, item);
-//                startActivity(intent);
-//
-//            }
-//        });
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String item = friendAdapter.getItem(i);
+
+                Intent intent = new Intent(friendList, Profile.class).
+                        putExtra(Intent.EXTRA_TEXT, "friend," + item);
+                startActivity(intent);
+
+            }
+        });
 
 
     }
