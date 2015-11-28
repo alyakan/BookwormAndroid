@@ -5,6 +5,15 @@
     <string name="action_my_booklist" translatable="false">My Books</string>
     <string name="action_profile" translatable="false">Profile</string>
     <string name="title_activity_news_feed">NewsFeed</string>
+
+    <string name="facebook_app_id">851164311667755</string>
+    <string name="title_activity_facebook_login">FacebookLogin</string>
+    <string name="title_activity_post_detail">PostDetail</string>
+    <string name="comment">Enter your comment</string>
+    <string name="title_activity_friend_list">FriendList</string>
+    <string name="action_friendlist">My Friends</string>
+
+
     <string name="title_activity_book_list">Browse Books</string>
     <string name="title_activity_book_detail">Book Detail</string>
     <string name="title_activity_my_book_list_categories">My Books</string>
@@ -25,4 +34,5 @@
         completions."
     </string>
     <string name="title_activity_profile">Profile</string>
+
 </resources>
