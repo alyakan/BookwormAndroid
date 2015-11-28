@@ -4,13 +4,14 @@
     <string name="action_booklist" translatable="false">Browse Books</string>
     <string name="action_my_booklist" translatable="false">My Books</string>
     <string name="action_profile" translatable="false">Profile</string>
-    <string name="title_activity_news_feed">NewsFeed</string>
+    <string name="action_newsfeed" translatable="false">Newsfeed</string>
+    <string name="title_activity_news_feed">Newsfeed</string>
 
     <string name="facebook_app_id">851164311667755</string>
     <string name="title_activity_facebook_login">FacebookLogin</string>
     <string name="title_activity_post_detail">PostDetail</string>
     <string name="comment">Enter your comment</string>
-    <string name="title_activity_friend_list">FriendList</string>
+    <string name="title_activity_friend_list">Friend List</string>
     <string name="action_friendlist">My Friends</string>
 
 
