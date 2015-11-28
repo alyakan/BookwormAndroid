@@ -1,4 +1,5 @@
 package com.example.andoird.bookworm;
+import com.facebook.FacebookSdk;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ public class NewsFeed extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_newsfeed);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,12 +69,11 @@ public class NewsFeed extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String item = newsfeedAdapter.getItem(i);
-                int duration = Toast.LENGTH_SHORT;
-//                Intent intent = new Intent(this, DetailActivity.class).
-//                        putExtra(Intent.EXTRA_TEXT, forecast);
-//                startActivity(intent);
-                Toast toast = Toast.makeText(newsFeed, item, duration);
-                toast.show();
+
+                Intent intent = new Intent(newsFeed, PostDetail.class).
+                        putExtra(Intent.EXTRA_TEXT, item);
+                startActivity(intent);
+
             }
         });
 
@@ -102,6 +103,12 @@ public class NewsFeed extends AppCompatActivity {
             startActivity(intent);
         }
 
+<<<<<<< HEAD
+        if(id == R.id.action_friendlist){
+            Intent intent = new Intent(this, FriendList.class);
+            startActivity(intent);
+        }
+=======
         if(id == R.id.action_my_booklist){
             Intent intent = new Intent(this, MyBookListCategories.class);
             startActivity(intent);
@@ -112,6 +119,7 @@ public class NewsFeed extends AppCompatActivity {
             startActivity(intent);
         }
 
+>>>>>>> master
         return super.onOptionsItemSelected(item);
     }
 }

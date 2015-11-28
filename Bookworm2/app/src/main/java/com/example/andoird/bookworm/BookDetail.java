@@ -26,7 +26,7 @@ public class BookDetail extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
+        populateDetailView();
 
     }
 
