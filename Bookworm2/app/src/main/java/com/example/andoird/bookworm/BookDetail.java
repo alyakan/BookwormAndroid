@@ -40,11 +40,11 @@ public class BookDetail extends AppCompatActivity {
         Intent intent = this.getIntent();
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
             String book_name = intent.getStringExtra(Intent.EXTRA_TEXT);
-            String author = intent.getStringExtra(Intent.EXTRA_ASSIST_CONTEXT);
+            String id = intent.getStringExtra(Intent.EXTRA_ASSIST_CONTEXT);
             TextView detail_text = (TextView) this.findViewById(R.id.book_detail_text);
             detail_text.setText("Book title: " + book_name);
             TextView author_text = (TextView) this.findViewById(R.id.author_detail_text);
-            author_text.setText("Author: " + author);
+            author_text.setText("ID: " + id);
             setTitle(book_name);
         }
     }

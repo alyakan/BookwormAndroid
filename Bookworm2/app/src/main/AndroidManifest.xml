@@ -41,6 +41,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="BookList" />
         </activity>
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
         <activity
             android:name=".PostDetail"
             android:label="@string/title_activity_post_detail"
@@ -59,7 +64,11 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:exported="true"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:name=".Profile"
             android:label="@string/title_activity_profile"

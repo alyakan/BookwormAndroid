@@ -45,15 +45,30 @@
                 android:layout_marginTop="16dp" android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
-            <Button android:id="@+id/facebook_sign_in_button" style="?android:textAppearanceSmall"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" android:text="@string/action_sign_in_facebook"
-                android:textStyle="bold" android:textColor="@color/colorFbTxt" android:backgroundTint="@color/colorFbBtn"
-                android:onClick="facebookLogin"/>
+            <!--<Button android:id="@+id/facebook_sign_in_button" style="?android:textAppearanceSmall"-->
+                <!--android:layout_width="match_parent" android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="16dp" android:text="@string/action_sign_in_facebook"-->
+                <!--android:textStyle="bold" android:textColor="@color/colorFbTxt" android:backgroundTint="@color/colorFbBtn"-->
+                <!--android:onClick="facebookLogin"/>-->
 
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/textView"
+                android:layout_gravity="center_horizontal" />
 
 
         </LinearLayout>
     </ScrollView>
+
+
 </LinearLayout>

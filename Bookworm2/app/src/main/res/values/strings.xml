@@ -7,7 +7,7 @@
     <string name="action_newsfeed" translatable="false">Newsfeed</string>
     <string name="title_activity_news_feed">Newsfeed</string>
 
-    <string name="facebook_app_id">851164311667755</string>
+    <string name="facebook_app_id">694420340661430</string>
     <string name="title_activity_facebook_login">FacebookLogin</string>
     <string name="title_activity_post_detail">PostDetail</string>
     <string name="comment">Enter your comment</string>
