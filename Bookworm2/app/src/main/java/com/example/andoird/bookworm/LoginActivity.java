@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private static String fbtoken;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -114,13 +115,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 AccessToken accessToken = loginResult.getAccessToken();
                 com.facebook.Profile profile = com.facebook.Profile.getCurrentProfile();
-
+                fbtoken = loginResult.getAccessToken().getToken();
                 if(Profile.getCurrentProfile() == null) {
                     mProfileTracker = new ProfileTracker() {
                         @Override
                         protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+
                             Log.v("facebook - profile", profile2.getFirstName());
-                            Log.d("Token ", loginResult.getAccessToken().getToken());
+                            Log.d("Token ", fbtoken);
+
                             mTextView.setText("Welcome " + profile2.getName());
                             mProfileTracker.stopTracking();
                         }
@@ -183,10 +186,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         Profile profile = Profile.getCurrentProfile();
         if(Profile.getCurrentProfile() == null) {
             mProfileTracker = new ProfileTracker() {
+
                 @Override
                 protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
                     Log.v("facebook - profile", profile2.getFirstName());
-
                     mTextView.setText("Welcome " + profile2.getName());
                     mProfileTracker.stopTracking();
                 }

@@ -19,6 +19,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.andoird.bookworm.model.BookPage;
+import com.example.andoird.bookworm.model.User;
+import com.example.andoird.bookworm.util.PublicApiRoutes;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +37,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.http.Body;
+import retrofit.http.Field;
+import retrofit.http.FormUrlEncoded;
+import retrofit.http.POST;
 
 public class BookList extends AppCompatActivity {
     private ArrayAdapter<String> bookAdapter;
@@ -161,6 +172,7 @@ public class BookList extends AppCompatActivity {
             }
         }
 
+
         @Override
         protected String[] doInBackground(Void... params) {
             // These two need to be declared outside the try/catch
@@ -170,6 +182,43 @@ public class BookList extends AppCompatActivity {
 
             // Will contain the raw JSON response as a string.
             String booklistJsonStr = null;
+            PublicApiRoutes publicApiRoutes = new PublicApiRoutes() {
+                @Override
+                public Call<User> createUser(@Body User user) {
+                    return null;
+                }
+
+                @Override
+                public Call<BookPage> createBookPage(@Body BookPage bookPage) {
+                    return null;
+                }
+
+                @Override
+                public void login(@Field("session[email]") String email, @Field("session[password]") String password, Callback<User> callback) {
+
+                }
+
+                @Override
+                public void getProducts(Callback<List<BookPage>> callback) {
+
+                }
+            };
+            BookPage bookPage = new BookPage("title", "author", "publisher", 2005, "genre", 23543);
+            publicApiRoutes.createBookPage(bookPage);
+
+//            User user = new User();
+//            user.setFirst_name("Moustafa");
+//            user.setLast_name("Mahmoud");
+//            user.setEmail("moustafa@mahmoud.com");
+//            user.setCity("Cairo");
+//            user.setCountry("Egypt");
+//            user.setDate_of_birth("8/8/1994");
+//            user.setGender("male");
+//            user.setFbtoken("CAAJ3klW63LYBABR2SyaLQ2FwHHOCaCGX4D7Mu" +
+//                    "sZAC8O6hhRicLPz72hfiW8Ph7pE1apZBHIyni8RlkODEI4MLElJvjB9z3" +
+//                    "rg9XCA3rWCsZBfElzpR8PPeOWszprGiWR12GVYdI5uJ3mtZAaDqo9lpJ6" +
+//                    "hpW0iJp9iDb0mui1gvdvQHE3NDTdEAwhDZBFBm6ssZD");
+//            publicApiRoutes.createUser(user);
 
             try {
                 // Construct the URL for the OpenWeatherMap query
@@ -180,12 +229,12 @@ public class BookList extends AppCompatActivity {
 
                 final String BOOKLIST_BASE_URL = "https://bookworm-alyakan.c9users.io/books.json";
 
-                final String USER_CREATE_BASE_URL = "https://bookworm-alyakan.c9users.io/users/new";
-                URL url2 = new URL(USER_CREATE_BASE_URL);
-                HttpURLConnection urlConnection1 = (HttpURLConnection) url2.openConnection();
-
-                urlConnection1.setRequestMethod("POST");
-                urlConnection.connect();
+//                final String USER_CREATE_BASE_URL = "https://bookworm-alyakan.c9users.io/users/new";
+//                URL url2 = new URL(USER_CREATE_BASE_URL);
+//                HttpURLConnection urlConnection1 = (HttpURLConnection) url2.openConnection();
+//
+//                urlConnection1.setRequestMethod("POST");
+//                urlConnection.connect();
 //                {"utf8"=>"✓",
 //                        "authenticity_token"=>"RfJIoHs3Ap9z5AJCraU5aa2wmR66vHTbKA3NqhpZb1BjbZHp3JvkZifuHAEcrhhRjYMo1AxSWEjZTSYobhdqYg==",
 //                        "user"=>{"first_name"=>"",
@@ -210,6 +259,8 @@ public class BookList extends AppCompatActivity {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
+
+
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
