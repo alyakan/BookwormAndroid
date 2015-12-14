@@ -106,7 +106,7 @@ public class NewsFeed extends AppCompatActivity {
         }
 
         if(id == R.id.action_verification){
-            Intent intent = new Intent(this, Verification.class);
+            Intent intent = new Intent(this,Verification.class);
             startActivity(intent);
         }
 

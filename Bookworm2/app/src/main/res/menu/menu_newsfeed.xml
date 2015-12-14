@@ -19,4 +19,11 @@
         android:title="@string/action_friendlist"
         android:orderInCategory="2"
         app:showAsAction="never"/>
+
+    <item android:id="@+id/action_verification"
+        android:title="@string/action_verification"
+        android:orderInCategory="5"
+        app:showAsAction="never"/>
+
+
 </menu>
