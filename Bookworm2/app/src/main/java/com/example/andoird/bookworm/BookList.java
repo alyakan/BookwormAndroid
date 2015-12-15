@@ -10,7 +10,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +20,6 @@ import android.widget.ListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +27,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -107,7 +104,7 @@ public class BookList extends AppCompatActivity {
                 int id = bookIDs.get(i);
                 Intent intent = new Intent(bookList, BookDetail.class).
                         putExtra(Intent.EXTRA_TEXT, item);
-                intent.putExtra(Intent.EXTRA_ASSIST_CONTEXT, id+"");
+                intent.putExtra(Intent.EXTRA_ASSIST_CONTEXT, id + "");
                 //intent.putExtra("EXTRA ID", bookIDs.get(i));
                 startActivity(intent);
 
@@ -199,6 +196,8 @@ public class BookList extends AppCompatActivity {
 
 
                 final String BOOKLIST_BASE_URL = "https://bookworm-alyakan.c9users.io/books.json";
+
+
 
 
                 Uri builtUri = Uri.parse(BOOKLIST_BASE_URL).buildUpon()

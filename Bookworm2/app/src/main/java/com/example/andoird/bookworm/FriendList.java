@@ -143,32 +143,10 @@ public class FriendList extends AppCompatActivity {
             String friendlistJsonStr = null;
 
             try {
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are avaiable at OWM's forecast API page, at
-                // http://openweathermap.org/API#forecast
-
 
 
                 final String FriendList_BASE_URL = "https://bookworm-alyakan.c9users.io/friends.json";
 
-                // final String USER_CREATE_BASE_URL = "https://bookworm-alyakan.c9users.io/users/new";
-                //URL url2 = new URL(USER_CREATE_BASE_URL);
-                // HttpURLConnection urlConnection1 = (HttpURLConnection) url2.openConnection();
-
-                //urlConnection1.setRequestMethod("POST");
-                //               urlConnection.connect();
-//                {"utf8"=>"✓",
-//                        "authenticity_token"=>"RfJIoHs3Ap9z5AJCraU5aa2wmR66vHTbKA3NqhpZb1BjbZHp3JvkZifuHAEcrhhRjYMo1AxSWEjZTSYobhdqYg==",
-//                        "user"=>{"first_name"=>"",
-//                        "last_name"=>"",
-//                        "email"=>"",
-//                        "password"=>"[FILTERED]",
-//                        "password_confirmation"=>"[FILTERED]",
-//                        "gender"=>"",
-//                        "city"=>"",
-//                        "country"=>"",
-//                        "fbtoken"=>""},
-//                    "commit"=>"Create my account"}
 
                 Uri builtUri = Uri.parse(FriendList_BASE_URL).buildUpon()
                         .build();

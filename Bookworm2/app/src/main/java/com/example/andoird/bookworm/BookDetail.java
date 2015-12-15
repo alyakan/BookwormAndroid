@@ -14,8 +14,17 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +38,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 public class BookDetail extends AppCompatActivity {
 
@@ -37,10 +49,15 @@ public class BookDetail extends AppCompatActivity {
     private Button button_2;
     private String buttonText;
 
+
+    private Button button_3;
+
     private int bookID;
+    private int status;
     private String title;
     private String author;
     private String genre;
+    private int status_2;
 
     private ArrayList<Integer> reviewID; // a list of ids for each review, for item click listener
     private ArrayList<String> reviewURLs; // a list of urls for each review, for item click listener
@@ -48,7 +65,7 @@ public class BookDetail extends AppCompatActivity {
     private ArrayList<String> reviews; // For Adapter population
     private ArrayAdapter<String> reviewsAdapter;
 
-
+    private int current_status ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +74,28 @@ public class BookDetail extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getBookID();
         new FetchBookDetailsTask().execute();
-
+        getBookID();
         populateBookDetailReviews();
         addListenerOnButton();
+        addListenerOnButton2();
+        addListenerOnButton3();
+
+
+
 
     }
+
+
+
+    public int getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(int newStatus) {
+        this.status = newStatus;
+    }
+
 
     protected void getBookID(){
         Intent intent = this.getIntent();
@@ -85,12 +117,43 @@ public class BookDetail extends AppCompatActivity {
             author_text.setText("Author: " + author);
             bookID = Integer.parseInt(id);
             setTitle(title);
-
         }
     }
 
+    protected void toggle(int s){
+        button = (Button) findViewById(R.id.finish_reading_button);
+        button_2 = (Button) findViewById(R.id.read_later_button);
+        switch (s) {
+            case 0:
+                button.setText(String.format("Start reading"));
+                button_2.setVisibility(View.GONE);
+                break;
+
+            case 1:
+                button.setText(String.format("Finish reading"));
+                button_2.setVisibility(View.GONE);
+                break;
+
+            case 2:
+                button.setText(String.format("Start reading"));
+                button_2.setVisibility(View.VISIBLE);
+                break;
+            default:
+                button.setText(String.format("Start reading"));
+                button_2.setVisibility(View.VISIBLE);
+                break;
+           /* case 4:
+                button.setText(String.format("Start reading"));
+                button_2.setVisibility(View.VISIBLE);
+                break;*/
+        }
+
+    }
+
     protected void populateBookDetailReviews() {
+
         String[] data = {
+
 //                "This book is awesome",
 //                "This book is great",
 //                "This book is beautiful",
@@ -113,8 +176,8 @@ public class BookDetail extends AppCompatActivity {
         );
         ListView listview = (ListView) this.findViewById(R.id.listview_reviews);
         listview.setAdapter(reviewsAdapter);
-        button = (Button) findViewById(R.id.finish_reading_button);
-        button.setText(String.format("Start Reading"));
+       // button = (Button) findViewById(R.id.finish_reading_button);
+        //button.setText(String.format("Start Reading"));
         final BookDetail reviewlist = this;
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -122,39 +185,61 @@ public class BookDetail extends AppCompatActivity {
                 String item = reviewsAdapter.getItem(i);
                 Intent intent = new Intent(reviewlist, ReviewDetail.class).
                         putExtra(Intent.EXTRA_TEXT, item);
+                //toggle();
                 startActivity(intent);
 
             }
         });
 
+
     }
 
     public void addListenerOnButton() {
-
         button = (Button) findViewById(R.id.finish_reading_button);
-
-        button_2  =(Button) findViewById(R.id.read_later_button);
-
-        buttonText = button.getText().toString();
-
+        button_2 = (Button) findViewById(R.id.read_later_button);
 
         button.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                if (buttonText.equals("Start Reading")) {
-                    button.setText(String.format("Finish Reading"));
-                    button_2.setVisibility(View.GONE);
-                }
-
-                if(buttonText.equals("Finish Reading")){
-                    button.setText(String.format("Start Reading"));
-                }
-
+                if (button.getText().toString().equals("Finish reading"))
+                    alterStatus(2);
+                else
+                    alterStatus(1);
             }
         });
 
     }
+
+    public void addListenerOnButton2() {
+        button_2 = (Button) findViewById(R.id.read_later_button);
+        button_2.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+               alterStatus(0);
+            }
+        });
+
+
+    }
+
+    public void addListenerOnButton3() {
+        button_3 = (Button) findViewById(R.id.button);
+        button_3.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                EditText txtDescription = (EditText) findViewById(R.id.post_edit_text);
+                String text = txtDescription.getText().toString();
+                postReview(text);
+            }
+        });
+
+
+    }
+
+
 
     public class FetchBookDetailsTask extends AsyncTask<Void, Void, String> {
         private final String LOG_TAG = FetchBookDetailsTask.class.getSimpleName();
@@ -316,6 +401,81 @@ public class BookDetail extends AppCompatActivity {
                 }
             }
         }
+    }
+
+
+    public void   alterStatus(int st ) {
+
+
+        String url = "https://bookworm-alyakan.c9users.io/current_status/"+bookID+"/"+st+".json" ;
+
+        // Request a string response
+        JsonObjectRequest jsonRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // the response is already constructed as a JSONObject!
+                        try {
+                            /*response = response.getJSONObject("args");
+                            String site = response.getString("site"),
+                                    network = response.getString("network");
+                            System.out.println("Site: "+site+"\nNetwork: "+network);*/
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+
+        Volley.newRequestQueue(this).add(jsonRequest);
+        toggle(st);
+
+
+    }
+
+    public void postReview(String s){
+        final String  review = s;
+        String url = "https://bookworm-alyakan.c9users.io/book_pages/"+bookID+"/reviews";
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {/*
+                            JSONObject jsonResponse = new JSONObject(response).getJSONObject("form");
+                            String site = jsonResponse.getString("site"),
+                                    network = jsonResponse.getString("network");
+                            System.out.println("Site: "+site+"\nNetwork: "+network))*/
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+
+                Map<String, String>  params = new HashMap<>();
+                // the POST parameters:
+                params.put("review", review);
+                return params;
+
+            }
+        };
+        Volley.newRequestQueue(this).add(postRequest);
+
     }
 
 }
