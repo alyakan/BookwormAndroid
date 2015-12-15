@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -68,17 +69,17 @@ public class FriendList extends AppCompatActivity {
         final FriendList friendList = this;
 
 
-        /*listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String item = friendAdapter.getItem(i);
 
                 Intent intent = new Intent(friendList, Profile.class).
-                        putExtra(Intent.EXTRA_TEXT, "friend," + item);
+                        putExtra(Intent.EXTRA_ASSIST_CONTEXT, "friend," + item);
                 startActivity(intent);
 
             }
-        });*/
+        });
 
 
     }

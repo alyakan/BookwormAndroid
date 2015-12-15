@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorFbTxt">#dfe3ee</color>
     <color name="colorFbBtn">#3b5998</color>
+    <color name="colorRjct">#d42222</color>
+    <color name="colorAccpt">#1cb25b</color>
 </resources>

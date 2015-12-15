@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="46dp"
+        android:text="New Text"
+        android:id="@+id/list_item_follow_request_text_view"
+        android:layout_weight="0.95" />
+
+    <!--<Button-->
+        <!--style="?android:attr/buttonStyleSmall"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:backgroundTint="@color/colorAccpt"-->
+        <!--android:text="Accept"-->
+        <!--android:id="@+id/button2" />-->
+
+    <!--<Button-->
+        <!--style="?android:attr/buttonStyleSmall"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Reject"-->
+        <!--android:backgroundTint="@color/colorRjct"-->
+        <!--android:id="@+id/button3" />-->
+</LinearLayout>

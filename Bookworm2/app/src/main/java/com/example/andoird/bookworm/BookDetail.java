@@ -25,6 +25,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +47,9 @@ public class BookDetail extends AppCompatActivity {
 
     private Button button;
     private Button button_2;
+    private String buttonText;
+
+
     private Button button_3;
 
     private int bookID;
@@ -69,6 +73,7 @@ public class BookDetail extends AppCompatActivity {
         setContentView(R.layout.activity_book_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         new FetchBookDetailsTask().execute();
         getBookID();
         populateBookDetailReviews();
@@ -91,7 +96,8 @@ public class BookDetail extends AppCompatActivity {
         this.status = newStatus;
     }
 
-    protected void getBookID() {
+
+    protected void getBookID(){
         Intent intent = this.getIntent();
         if (intent != null && intent.hasExtra(Intent.EXTRA_ASSIST_CONTEXT)) {
             String id = intent.getStringExtra(Intent.EXTRA_ASSIST_CONTEXT);
@@ -147,6 +153,17 @@ public class BookDetail extends AppCompatActivity {
     protected void populateBookDetailReviews() {
 
         String[] data = {
+
+//                "This book is awesome",
+//                "This book is great",
+//                "This book is beautiful",
+//                "This book is magnificent",
+//                "This book is awesome",
+//                "This book is great",
+//                "This book is beautiful",
+//                "This book is magnificent",
+//                "This book is depressing",
+//                "This book is good",
 
         };
 
@@ -224,29 +241,18 @@ public class BookDetail extends AppCompatActivity {
 
 
 
-        public class FetchBookDetailsTask extends AsyncTask<Void, Void, String> {
+    public class FetchBookDetailsTask extends AsyncTask<Void, Void, String> {
         private final String LOG_TAG = FetchBookDetailsTask.class.getSimpleName();
 
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         @Override
         protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            String[] data = new String[reviews.size()];
+            String []data = new String[reviews.size()];
             reviewsAdapter.clear();
             reviewsAdapter.addAll(reviews.toArray(data));
-            Log.v(LOG_TAG, "----------");
-            Log.v(LOG_TAG, s);
-            if(s.equals("null"))
-                toggle(4);
-            else
-                toggle(Integer.parseInt(s));
             populateDetailView();
 
         }
-
-
-
-
 
         @Override
         protected String doInBackground(Void... String) {
@@ -264,13 +270,16 @@ public class BookDetail extends AppCompatActivity {
                 // http://openweathermap.org/API#forecast
 
 
-                final String BOOKDETAIL_BASE_URL = "https://bookworm-alyakan.c9users.io/book_pages/" + bookID + ".json";
+
+                final String BOOKDETAIL_BASE_URL = "https://bookworm-alyakan.c9users.io/book_pages/"+ bookID +".json";
+
 
 
                 Uri builtUri = Uri.parse(BOOKDETAIL_BASE_URL).buildUpon()
                         .build();
 
                 URL url = new URL(builtUri.toString());
+
 
 
                 Log.v(LOG_TAG, "Built URI" + url);
@@ -308,7 +317,7 @@ public class BookDetail extends AppCompatActivity {
                 // If the code didn't successfully get the weather data, there's no point in attemping
                 // to parse it.
                 return null;
-            } finally {
+            } finally{
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
@@ -321,10 +330,10 @@ public class BookDetail extends AppCompatActivity {
                     }
                 }
             }
-            try {
-                String s = getBookDataFromJson(bookdetailJsonStr);
-                return s;
-            } catch (JSONException e) {
+            try{
+                getBookDataFromJson(bookdetailJsonStr);
+                return null;
+            }catch(JSONException e){
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
                 return null;
@@ -337,7 +346,7 @@ public class BookDetail extends AppCompatActivity {
         * Take JSON String representing the book list retrieved from the API, convert it
         * into a JSON Array and extract the information to populate the booklistAdapter
         * */
-        private String getBookDataFromJson(String bookdetialJsonStr)
+        private void getBookDataFromJson(String bookdetialJsonStr)
                 throws JSONException {
 
 
@@ -346,39 +355,33 @@ public class BookDetail extends AppCompatActivity {
             final String OWM_AUTHOR = "author";
             final String OWM_PUBLISHER = "publisher";
             final String OWM_YEAR = "year";
-            final String OWM_STATUS = "status";
             final String OWM_GENRE = "genre";
             final String OWM_REVIEWS = "reviews";
 
             JSONObject bookDetailJson = new JSONObject(bookdetialJsonStr);
             JSONArray reviewsJSONArray = bookDetailJson.getJSONArray(OWM_REVIEWS);
-            String status_string = bookDetailJson.getString(OWM_STATUS);
 
 
 
-            try {
+            try{
                 Log.v(LOG_TAG, "------------------------------------");
                 title = bookDetailJson.getString(OWM_TITLE);
                 author = bookDetailJson.getString(OWM_AUTHOR);
                 genre = bookDetailJson.getString(OWM_GENRE);
                 bookID = Integer.parseInt(bookDetailJson.getString(OWM_ID));
-                //String status_string = bookDetailJson.getString(OWM_STATUS);
 
-                //current_status = status;
+
 
                 Log.v(LOG_TAG, title);
                 Log.v(LOG_TAG, author);
                 Log.v(LOG_TAG, genre);
-                Log.v(LOG_TAG, bookID + "");
-                Log.v(LOG_TAG, status_string + "");
-               // Log.v(LOG_TAG, current_status + "");
-
-            } catch (Exception e) {
+                Log.v(LOG_TAG, bookID+"");
+            }catch(Exception e){
                 Log.e(LOG_TAG, e.getMessage());
             }
             reviewID = new ArrayList<Integer>();
             reviews = new ArrayList<String>();
-            for (int i = 0; i < reviewsJSONArray.length(); i++) {
+            for(int i = 0; i < reviewsJSONArray.length(); i++) {
                 String review;
                 String user_id;
                 String review_id;
@@ -397,9 +400,9 @@ public class BookDetail extends AppCompatActivity {
                     Log.e(LOG_TAG, e.getMessage());
                 }
             }
-            return status_string;
         }
     }
+
 
     public void   alterStatus(int st ) {
 
@@ -474,6 +477,7 @@ public class BookDetail extends AppCompatActivity {
         Volley.newRequestQueue(this).add(postRequest);
 
     }
+
 }
 
 

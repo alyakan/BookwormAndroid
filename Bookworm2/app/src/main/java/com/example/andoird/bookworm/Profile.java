@@ -7,7 +7,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,13 +20,36 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class Profile extends AppCompatActivity {
-    
+    private boolean followRequest;
+
+    private int ID;
+    private String first_name;
+    private String last_name;
+    private String city;
+    private String country;
+    private String date_of_birth;
+    private String gender;
+    private String email;
+
+    private ArrayAdapter<String> newsfeedAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +67,41 @@ public class Profile extends AppCompatActivity {
             }
         });
         Intent intent = this.getIntent();
-        String string = intent.getStringExtra(Intent.EXTRA_TEXT);
-        String name = "";
-        if(string.contains("friend")) {
-            name = string.split(",")[1];
-            ((TextView)findViewById(R.id.username_textview)).setText(name);
+        String name = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (intent.hasExtra(Intent.EXTRA_REFERRER_NAME)) { // Coming from follow request list
+            followRequest = true;
+            ID = Integer.parseInt(intent.getStringExtra(Intent.EXTRA_ASSIST_CONTEXT));
             populateFriendNewsfeed(name);
-        }else{
-            name = "Aly Yakan";
-            ((TextView)findViewById(R.id.username_textview)).setText(name);
-            populateNewsfeed();
+            ((TextView) findViewById(R.id.username_textview)).setText(name);
+            getProfileInfo();
+
+        } else {
+            String string = null;
+            if(intent.hasExtra(Intent.EXTRA_ASSIST_CONTEXT)) {
+                string = intent.getStringExtra(Intent.EXTRA_ASSIST_CONTEXT);
+            }
+            ((TextView) findViewById(R.id.username_textview)).setText(name);
+            if (string != null && string.contains("friend")) { // Coming from friends list
+                name = string.split(",")[1];
+                ((TextView) findViewById(R.id.username_textview)).setText(name);
+                populateFriendNewsfeed(name);
+
+            } else {
+                populateNewsfeed();
+                getMyProfileInfo();
+            }
         }
+
+//        ((TextView)findViewById(R.id.username_textview)).setText(name);
+//        if(string.contains("friend")) {
+//            name = string.split(",")[1];
+//            ((TextView)findViewById(R.id.username_textview)).setText(name);
+//            populateFriendNewsfeed(name);
+//        }else{
+//            name = "Aly Yakan";
+//            ((TextView)findViewById(R.id.username_textview)).setText(name);
+//            populateNewsfeed();
+//        }
 
         populateProfileInfo(name);
 
@@ -73,7 +122,7 @@ public class Profile extends AppCompatActivity {
 
         };
         List<String> newsfeed_ArrayList = new ArrayList<String>(Arrays.asList(data));
-        final ArrayAdapter<String> newsfeedAdapter = new ArrayAdapter<String>(
+        this.newsfeedAdapter = new ArrayAdapter<String>(
                 this,
                 R.layout.list_item_newsfeed, // The xml component
                 R.id.list_item_newsfeed_text_view, // The textview inside the xml component
@@ -100,20 +149,21 @@ public class Profile extends AppCompatActivity {
 
     protected void populateNewsfeed(){
         String[] data = {
-                "You have finished reading Harry Potter 1",
-                "You have finished reading Harry Potter 2",
-                "You have finished reading Harry Potter 3",
-                "You have finished reading Harry Potter 4",
-                "You have finished reading Harry Potter 5",
-                "You have finished reading Harry Potter 6",
-                "You have started reading Harry Potter 7",
-                "You have started reading Harry Potter 8",
-                "You have started reading Hunger Games 1",
-                "You have added Hunger Games 2 to your wish list"
+//                "You have finished reading Harry Potter 1",
+//                "You have finished reading Harry Potter 2",
+//                "You have finished reading Harry Potter 3",
+//                "You have finished reading Harry Potter 4",
+//                "You have finished reading Harry Potter 5",
+//                "You have finished reading Harry Potter 6",
+//                "You have started reading Harry Potter 7",
+//                "You have started reading Harry Potter 8",
+//                "You have started reading Hunger Games 1",
+//                "You have added Hunger Games 2 to your wish list"
 
         };
+
         List<String> newsfeed_ArrayList = new ArrayList<String>(Arrays.asList(data));
-        final ArrayAdapter<String> newsfeedAdapter = new ArrayAdapter<String>(
+        newsfeedAdapter = new ArrayAdapter<String>(
                 this,
                 R.layout.list_item_newsfeed, // The xml component
                 R.id.list_item_newsfeed_text_view, // The textview inside the xml component
@@ -143,25 +193,168 @@ public class Profile extends AppCompatActivity {
         String [] data = {
                 "Birthday",
                 "Email",
-                "Gender"
+                "Gender",
+                "City",
+                "Country"
         };
         // Adding child data
-        List<String> name = new ArrayList<String>();
-        name.add("10/8/1994");
-        name.add(profileName + "@gmail.com");
-        name.add("Male");
-
+        List<String> info = new ArrayList<String>();
+        info.add(date_of_birth);
+        info.add(email);
+        info.add(gender);
+        info.add(city);
+        info.add(country);
+        ((TextView) findViewById(R.id.username_textview)).setText(first_name + " " + last_name);
         List<String> profile_info = new ArrayList<String>();
         profile_info.add("Personal Info");
 
 
         HashMap<String, List<String>> listDataChild = new HashMap<String, List<String>>();
-        listDataChild.put(profile_info.get(0), name); // Header, Child data
+        listDataChild.put(profile_info.get(0), info); // Header, Child data
 
         com.example.andoird.bookworm.ExpandableListAdapter expandableListAdapter = new com.example.andoird.bookworm.ExpandableListAdapter(this, profile_info, listDataChild);
 
         ExpandableListView expandableListView = (ExpandableListView) this.findViewById(R.id.lvExp);
         expandableListView.setAdapter(expandableListAdapter);
+        getRecentUpdates();
+    }
+
+    private void getMyProfileInfo() {
+        String url = "https://bookworm-alyakan.c9users.io/get_current_user.json";
+
+        StringRequest getRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            ID = jsonObject.getInt("id");
+                            first_name = jsonObject.getString("first_name");
+                            last_name = jsonObject.getString("last_name");
+                            email = jsonObject.getString("email");
+                            date_of_birth = jsonObject.getString("date_of_birth");
+                            city = jsonObject.getString("city");
+                            country = jsonObject.getString("country");
+                            gender = jsonObject.getString("gender");
+                            Log.d("PROFILE", "--------------------------------");
+                            Log.d("PROFILE", ID+"");
+                            Log.d("PROFILE", first_name);
+                            Log.d("PROFILE", last_name);
+                            Log.d("PROFILE", city);
+                            Log.d("PROFILE", email);
+                            Log.d("PROFILE", date_of_birth);
+                            Log.d("PROFILE", gender);
+                            populateProfileInfo(first_name);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        );
+        Volley.newRequestQueue(this).add(getRequest);
+    }
+
+    /*
+    * Gets Profile Info for a user other than myself*/
+    private void getProfileInfo(){
+        String url = "https://bookworm-alyakan.c9users.io/users/" + ID + ".json";
+
+        StringRequest getRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            first_name = jsonObject.getString("first_name");
+                            last_name = jsonObject.getString("last_name");
+                            email = jsonObject.getString("email");
+                            date_of_birth = jsonObject.getString("date_of_birth");
+                            city = jsonObject.getString("city");
+                            country = jsonObject.getString("country");
+                            gender = jsonObject.getString("gender");
+                            Log.d("PROFILE", "--------------------------------");
+                            Log.d("PROFILE", first_name);
+                            Log.d("PROFILE", last_name);
+                            Log.d("PROFILE", city);
+                            Log.d("PROFILE", email);
+                            Log.d("PROFILE", date_of_birth);
+                            Log.d("PROFILE", gender);
+                            populateProfileInfo(first_name);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        );
+        Volley.newRequestQueue(this).add(getRequest);
+    }
+
+    private void getRecentUpdates(){
+        String url = "https://bookworm-alyakan.c9users.io/recent_updates/" + ID + ".json";
+
+        StringRequest getRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                             populateListWithResponse(response);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        );
+        Volley.newRequestQueue(this).add(getRequest);
+    }
+    private void populateListWithResponse(String response){
+        String []contents;
+
+        try{
+            JSONArray jsonResponse = new JSONArray((response));
+            contents = new String[jsonResponse.length()];
+//            userIDs = new int[jsonResponse.length()];
+            for (int i = 0; i < jsonResponse.length(); i++){
+                String content = jsonResponse.getJSONObject(i).getString("content") + "\n"
+                        + jsonResponse.getJSONObject(i).getString("created_at");
+
+//                userIDs[i] = Integer.parseInt(jsonSender.getString("id"));
+                contents[i] = content;
+            }
+            if(contents != null) {
+                newsfeedAdapter.clear();
+                newsfeedAdapter.addAll(contents);
+            }
+        } catch(JSONException e){
+
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
+        return true;
     }
 
     @Override
@@ -193,6 +386,11 @@ public class Profile extends AppCompatActivity {
 
         if(id == R.id.action_friendlist){
             Intent intent = new Intent(this, FriendList.class);
+            startActivity(intent);
+        }
+
+        if(id == R.id.action_follow_requests){
+            Intent intent = new Intent(this, FollowRequests.class);
             startActivity(intent);
         }
 
