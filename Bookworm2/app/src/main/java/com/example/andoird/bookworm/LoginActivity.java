@@ -34,6 +34,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -45,10 +50,15 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.Profile;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -84,6 +94,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected AccessTokenTracker accessTokenTracker;
     private TextView mTextView;
     protected ProfileTracker mProfileTracker;
+    private String fbtoken; // The facebooktoken is actually the facebook profile ID
+    private boolean verified;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
         generateKeyHash();
+        verified = false;
         LoginButton loginButton = (LoginButton) this.findViewById(R.id.login_button);
         loginButton.setReadPermissions("public_profile", "user_friends");
         mTextView = (TextView)this.findViewById(R.id.textView);
@@ -120,7 +133,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         @Override
                         protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
                             Log.v("facebook - profile", profile2.getFirstName());
-                            Log.d("Token ", loginResult.getAccessToken().getToken());
+                            fbtoken = profile2.getId();
+                            Log.d("ID ", profile2.getId());
+                            verified = verifyUser();
                             mTextView.setText("Welcome " + profile2.getName());
                             mProfileTracker.stopTracking();
                         }
@@ -128,12 +143,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     mProfileTracker.startTracking();
                 }
                 else {
-                    Log.d("Token ", loginResult.getAccessToken().getToken());
+                    fbtoken = profile.getId();
+                    Log.d("ID ", profile.getId());
+                    verified = verifyUser();
                     profile = Profile.getCurrentProfile();
                     Log.v("facebook - profile", profile.getFirstName());
                 }
                 if(profile != null){
-                    Log.d("Token ", loginResult.getAccessToken().getToken());
+                    fbtoken = profile.getId();
+                    verified = verifyUser();
+                    Log.d("ID ", profile.getId());
                     mTextView.setText("Welcome " + profile.getName());
                 }
                 // App code
@@ -180,26 +199,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onResume(){
         super.onResume();
-        Profile profile = Profile.getCurrentProfile();
-        if(Profile.getCurrentProfile() == null) {
-            mProfileTracker = new ProfileTracker() {
-                @Override
-                protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
-                    Log.v("facebook - profile", profile2.getFirstName());
-
-                    mTextView.setText("Welcome " + profile2.getName());
-                    mProfileTracker.stopTracking();
-                }
-            };
-            mProfileTracker.startTracking();
-        }
-        else {
-            profile = Profile.getCurrentProfile();
-            Log.v("facebook - profile", profile.getFirstName());
-        }
-        if(profile != null){
-            mTextView.setText("Welcome " + profile.getName());
-        }
+//        Profile profile = Profile.getCurrentProfile();
+//        if(Profile.getCurrentProfile() != null) {
+//            mProfileTracker = new ProfileTracker() {
+//                @Override
+//                protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+//                    Log.v("facebook - profile", profile2.getFirstName());
+//
+//
+//                    mTextView.setText("Welcome " + profile2.getName());
+//                    mProfileTracker.stopTracking();
+//                }
+//            };
+//            mProfileTracker.startTracking();
+//        }
+//        else {
+//            profile = Profile.getCurrentProfile();
+//            Log.v("facebook - profile", profile.getFirstName());
+//        }
+//        if(profile != null){
+//            mTextView.setText("Welcome " + profile.getName());
+//        }
 
     }
 
@@ -212,10 +232,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void onDestroy() {
         super.onDestroy();
-        accessTokenTracker.stopTracking();
+        if (accessTokenTracker != null)
+            accessTokenTracker.stopTracking();
     }
 
-    private void generateKeyHash(){
+    private void generateKeyHash() {
         Log.d("KeyHash: ", "-----------------------------------------");
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -231,6 +252,58 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } catch (NoSuchAlgorithmException e) {
 
         }
+    }
+
+    private boolean verifyUser(){
+        if (fbtoken != null){
+            String url = "https://bookworm-alyakan.c9users.io/verify";
+
+            StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                String verif = jsonResponse.getString("verified");
+                                if(verif == "true"){
+                                    verified = true;
+                                    Intent intent = new Intent(loginActivity, NewsFeed.class);
+                                    startActivity(intent);
+                                }else {
+                                    verified = false;
+                                }
+
+                                    Log.d("Verification", "--------------------------------");
+                                    Log.d("VERIFICATION", verif);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            error.printStackTrace();
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams()
+                {
+                    Map<String, String>  params = new HashMap<>();
+                    // the POST parameters:
+                    params.put("fbtoken", fbtoken);
+                    // params.put("network", "tutsplus");
+                    return params;
+                }
+            };
+            Volley.newRequestQueue(this).add(postRequest);
+        }else {
+            verified = false;
+        }
+
+        return verified;
     }
 
     private void populateAutoComplete() {

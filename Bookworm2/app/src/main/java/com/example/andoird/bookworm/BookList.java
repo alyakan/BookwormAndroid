@@ -137,8 +137,28 @@ public class BookList extends AppCompatActivity {
             return true;
         }
 
-        if(id == R.id.action_booklist){
-            Intent intent = new Intent(this, BookList.class);
+        if(id == R.id.action_profile){
+            Intent intent = new Intent(this, Profile.class);
+            startActivity(intent);
+        }
+
+        if(id == R.id.action_my_booklist){
+            Intent intent = new Intent(this, MyBookListCategories.class);
+            startActivity(intent);
+        }
+
+        if(id == R.id.action_newsfeed){
+            Intent intent = new Intent(this, NewsFeed.class);
+            startActivity(intent);
+        }
+
+        if(id == R.id.action_friendlist){
+            Intent intent = new Intent(this, FriendList.class);
+            startActivity(intent);
+        }
+
+        if(id == R.id.action_follow_requests){
+            Intent intent = new Intent(this, FollowRequests.class);
             startActivity(intent);
         }
 
@@ -180,24 +200,6 @@ public class BookList extends AppCompatActivity {
 
                 final String BOOKLIST_BASE_URL = "https://bookworm-alyakan.c9users.io/books.json";
 
-                final String USER_CREATE_BASE_URL = "https://bookworm-alyakan.c9users.io/users/new";
-                URL url2 = new URL(USER_CREATE_BASE_URL);
-                HttpURLConnection urlConnection1 = (HttpURLConnection) url2.openConnection();
-
-                urlConnection1.setRequestMethod("POST");
-                urlConnection.connect();
-//                {"utf8"=>"✓",
-//                        "authenticity_token"=>"RfJIoHs3Ap9z5AJCraU5aa2wmR66vHTbKA3NqhpZb1BjbZHp3JvkZifuHAEcrhhRjYMo1AxSWEjZTSYobhdqYg==",
-//                        "user"=>{"first_name"=>"",
-//                        "last_name"=>"",
-//                        "email"=>"",
-//                        "password"=>"[FILTERED]",
-//                        "password_confirmation"=>"[FILTERED]",
-//                        "gender"=>"",
-//                        "city"=>"",
-//                        "country"=>"",
-//                        "fbtoken"=>""},
-//                    "commit"=>"Create my account"}
 
                 Uri builtUri = Uri.parse(BOOKLIST_BASE_URL).buildUpon()
                         .build();

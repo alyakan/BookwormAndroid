@@ -124,6 +124,11 @@ public class NewsFeed extends AppCompatActivity {
             Intent intent = new Intent(this, Profile.class);
             startActivity(intent);
         }
+
+        if(id == R.id.action_follow_requests){
+            Intent intent = new Intent(this, FollowRequests.class);
+            startActivity(intent);
+        }
         
         return super.onOptionsItemSelected(item);
     }
@@ -164,24 +169,6 @@ public class NewsFeed extends AppCompatActivity {
 
                 final String NEWSFEED_BASE_URL = "https://bookworm-alyakan.c9users.io/newsfeed.json";
 
-               // final String USER_CREATE_BASE_URL = "https://bookworm-alyakan.c9users.io/users/new";
-                //URL url2 = new URL(USER_CREATE_BASE_URL);
-               // HttpURLConnection urlConnection1 = (HttpURLConnection) url2.openConnection();
-
-                //urlConnection1.setRequestMethod("POST");
- //               urlConnection.connect();
-//                {"utf8"=>"✓",
-//                        "authenticity_token"=>"RfJIoHs3Ap9z5AJCraU5aa2wmR66vHTbKA3NqhpZb1BjbZHp3JvkZifuHAEcrhhRjYMo1AxSWEjZTSYobhdqYg==",
-//                        "user"=>{"first_name"=>"",
-//                        "last_name"=>"",
-//                        "email"=>"",
-//                        "password"=>"[FILTERED]",
-//                        "password_confirmation"=>"[FILTERED]",
-//                        "gender"=>"",
-//                        "city"=>"",
-//                        "country"=>"",
-//                        "fbtoken"=>""},
-//                    "commit"=>"Create my account"}
 
                 Uri builtUri = Uri.parse(NEWSFEED_BASE_URL).buildUpon()
                         .build();
@@ -195,10 +182,6 @@ public class NewsFeed extends AppCompatActivity {
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
-                URL url2 = new URL("https://bookworm-alyakan.c9users.io/generate.json");
-                HttpURLConnection connection = (HttpURLConnection) url2.openConnection();
-                connection.setRequestMethod("GET");
-                connection.connect();
 
                 // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
