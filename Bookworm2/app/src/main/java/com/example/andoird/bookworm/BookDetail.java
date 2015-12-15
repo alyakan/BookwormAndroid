@@ -22,6 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -36,7 +37,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class BookDetail extends AppCompatActivity {
@@ -210,7 +213,7 @@ public class BookDetail extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
-                EditText txtDescription = (EditText) findViewById(R.id.review_detail_text);
+                EditText txtDescription = (EditText) findViewById(R.id.post_edit_text);
                 String text = txtDescription.getText().toString();
                 postReview(text);
             }
@@ -433,6 +436,42 @@ public class BookDetail extends AppCompatActivity {
     }
 
     public void postReview(String s){
+        final String  review = s;
+        String url = "https://bookworm-alyakan.c9users.io/book_pages/"+bookID+"/reviews";
+
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {/*
+                            JSONObject jsonResponse = new JSONObject(response).getJSONObject("form");
+                            String site = jsonResponse.getString("site"),
+                                    network = jsonResponse.getString("network");
+                            System.out.println("Site: "+site+"\nNetwork: "+network))*/
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+
+                Map<String, String>  params = new HashMap<>();
+                // the POST parameters:
+                params.put("review", review);
+                return params;
+
+            }
+        };
+        Volley.newRequestQueue(this).add(postRequest);
 
     }
 }
